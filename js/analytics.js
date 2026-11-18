@@ -1,7 +1,7 @@
 // Google Analytics 4, loaded only after the visitor accepts.
 // 1. In Google Analytics go to Admin > Data streams > your web stream and copy the Measurement ID.
 // 2. Paste it below in place of G-XXXXXXXXXX.
-const GA_ID="G-XXXXXXXXXX";
+const GA_ID="G-Y6KEXVV157";
 
 (function(){
   const KEY="analytics-consent";

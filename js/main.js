@@ -61,7 +61,7 @@ if(all){
 
   const bar=el("filters");
   bar.innerHTML=cats.map(c=>`<button data-cat="${c}" aria-pressed="${c===cat}">${c}</button>`).join("")
-    +`<button class="more-btn" id="morebtn" aria-expanded="false" aria-controls="more">More filters<span class="badge" hidden></span></button>`;
+    +`<button class="more-btn" id="morebtn" aria-expanded="false" aria-controls="more">allergies and dietary filters<span class="badge" hidden></span></button>`;
 
   const panel=document.createElement("div");
   panel.id="more";panel.className="fpanel";panel.hidden=true;

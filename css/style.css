@@ -1,0 +1,154 @@
+:root{
+  --bg:#fbfbf6; --surface:#ffffff; --ink:#2a1a2b; --muted:#6a5a6b; --line:#e4e0d6;
+  --lemon:#f4d03f; --lemon-ink:#2a1a2b; --basil:#2f6b3f; --basil-ink:#ffffff;
+  --head:"Bricolage Grotesque","Trebuchet MS",Arial,sans-serif;
+  --body:"Newsreader",Georgia,"Times New Roman",serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b121c; --surface:#26192a; --ink:#f4efe6; --muted:#b9abb9; --line:#3b2c3f;
+    --lemon:#f4d03f; --lemon-ink:#2a1a2b; --basil:#7fc68f; --basil-ink:#1b121c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b121c; --surface:#26192a; --ink:#f4efe6; --muted:#b9abb9; --line:#3b2c3f;
+  --lemon:#f4d03f; --lemon-ink:#2a1a2b; --basil:#7fc68f; --basil-ink:#1b121c;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);color-scheme:light dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.15rem;line-height:1.6}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--basil);outline-offset:3px}
+h1,h2,h3{font-family:var(--head);line-height:1.05;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:0 1.25rem}
+
+header{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:.8rem;padding-bottom:.8rem;flex-wrap:wrap}
+.logo{font-family:var(--head);font-weight:800;font-size:1.35rem;text-decoration:none}
+nav{display:flex;gap:.4rem}
+nav a{font-family:var(--head);font-weight:500;text-decoration:none;padding:.4rem .9rem;border-radius:99px}
+nav a:hover{background:var(--line)}
+nav a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+
+main{padding-bottom:4rem}
+
+.hero{background:var(--lemon);color:var(--lemon-ink);padding:4rem 0 3.5rem}
+.hero h1{font-weight:800;font-size:clamp(3rem,10vw,7rem);letter-spacing:-.03em;max-width:12ch}
+.hero p{max-width:34rem;font-size:1.3rem;margin:1.5rem 0 2rem}
+.btn{display:inline-block;font-family:var(--head);font-weight:500;font-size:1.05rem;background:var(--basil);color:var(--basil-ink);border:0;border-radius:99px;padding:.8rem 1.6rem;text-decoration:none;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.hero .btn{background:var(--lemon-ink);color:#fff}
+
+.sec{padding:3rem 0 0}
+.sec h2{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.25rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.thumb{height:160px}
+.thumb img{width:100%;height:100%;display:block;object-fit:cover}
+.card .in{padding:1rem 1.1rem 1.2rem}
+.card h3{font-size:1.3rem;margin-bottom:.3rem}
+.meta{color:var(--muted);font-size:.95rem;margin:0 0 .6rem}
+.card p{margin:0 0 .8rem}
+details summary{cursor:pointer;font-family:var(--head);font-weight:500;color:var(--basil)}
+details[open] summary{margin-bottom:.6rem}
+details h4{font-family:var(--head);margin:.8rem 0 .2rem;font-size:1rem}
+details ul,details ol{margin:0;padding-left:1.2rem;font-size:1rem}
+
+.about{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+.about .big{font-size:5rem;text-align:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1.5rem}
+@media(max-width:700px){.about{grid-template-columns:1fr}}
+
+.pagehead{padding:3rem 0 0}
+.pagehead h1{font-size:clamp(2.4rem,7vw,4.5rem);font-weight:800;letter-spacing:-.02em}
+.pagehead p{color:var(--muted);max-width:34rem}
+.filters{display:flex;gap:.5rem;flex-wrap:wrap;margin:1.5rem 0 0}
+.filters button{font-family:var(--head);font-weight:500;font-size:1rem;background:transparent;color:var(--ink);border:1.5px solid var(--ink);border-radius:99px;padding:.4rem 1rem;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+form{display:grid;gap:1.1rem;max-width:34rem;margin-top:2rem}
+label{font-family:var(--head);font-weight:500;display:grid;gap:.35rem}
+input,select,textarea{font:inherit;font-family:var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:.7rem .8rem;width:100%}
+textarea{min-height:9rem;resize:vertical}
+.ok{display:none;max-width:34rem;margin-top:2rem;padding:1.2rem 1.4rem;border-radius:14px;background:var(--lemon);color:var(--lemon-ink)}
+.ok.show{display:block}
+
+footer{border-top:1px solid var(--line);padding:1.5rem 0;color:var(--muted);font-size:.95rem}
+footer .wrap{display:flex;justify-content:space-between;gap:.5rem 1.5rem;flex-wrap:wrap}
+footer nav a{padding:0;border-radius:0;text-decoration:underline;font-family:var(--body);font-weight:400}
+footer nav a:hover{background:none;color:var(--ink)}
+footer nav{gap:1.25rem}
+.legal{max-width:40rem;margin-top:2rem}
+.legal h2{font-size:1.4rem;margin:2rem 0 .5rem}
+.legal p,.legal li{margin:0 0 .8rem}
+.legal .upd{color:var(--muted);font-size:.95rem}
+@media (prefers-reduced-motion:no-preference){.hero h1{animation:rise .7s ease-out both}@keyframes rise{from{opacity:0;transform:translateY(18px)}}}
+
+
+/* ---- Recipe cards, recipe pages, transitions and animations ---- */
+a.card{display:block;text-decoration:none;color:inherit}
+.card .thumb{overflow:hidden}
+.card .more{font-family:var(--head);font-weight:500;color:var(--basil)}
+.card .more span{display:inline-block}
+.back{display:inline-block;margin-top:2rem;font-family:var(--head);font-weight:500;text-decoration:none;color:var(--basil)}
+.back:hover{text-decoration:underline}
+.rhero{height:clamp(200px,38vw,340px);border-radius:14px;overflow:hidden;margin:1rem 0 2rem}
+.rhead h1{font-size:clamp(2.4rem,7vw,4.5rem);font-weight:800;letter-spacing:-.02em}
+.rhead .meta{margin-bottom:.6rem}
+.rhead .lede{font-size:1.3rem;max-width:36rem;margin:1rem 0 0}
+.rcols{display:grid;grid-template-columns:1fr 1.6fr;gap:2.5rem;margin-top:2.5rem}
+.rcols h2{font-size:1.6rem;margin-bottom:1rem}
+.ings{list-style:none;padding:0;margin:0}
+.ings li{padding:.55rem 0;border-bottom:1px solid var(--line)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;display:grid;grid-template-columns:2.2rem 1fr;gap:.9rem;margin-bottom:1.1rem}
+.steps li::before{content:counter(s);font-family:var(--head);font-weight:800;background:var(--lemon);color:var(--lemon-ink);border-radius:50%;width:2.2rem;height:2.2rem;display:grid;place-items:center}
+@media(max-width:760px){.rcols{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:no-preference){
+  /* Smooth cross-fade between pages (Chrome, Edge, Safari) */
+  @view-transition{navigation:auto}
+  header{view-transition-name:site-header}
+  ::view-transition-old(root){animation:.2s ease-in both vt-out}
+  ::view-transition-new(root){animation:.4s ease-out both vt-in}
+  ::view-transition-group(*){animation-duration:.5s}
+  @keyframes vt-out{to{opacity:0;transform:translateY(-8px)}}
+  @keyframes vt-in{from{opacity:0;transform:translateY(14px)}}
+  @keyframes pop{from{opacity:0;transform:translateY(22px) scale(.98)}}
+
+  /* Staggered entrance */
+  .card,.ings li,.steps li{animation:pop .55s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms)}
+  .hero p,.hero .btn{animation:pop .7s .15s both}
+  .pagehead h1,.rhead h1{animation:pop .6s both}
+
+  /* Hover effects */
+  a.card{transition:transform .25s,box-shadow .25s}
+  a.card:hover{transform:translateY(-6px);box-shadow:0 14px 30px rgba(0,0,0,.16)}
+  .card .thumb img{transition:transform .5s}
+  a.card:hover .thumb img{transform:scale(1.07)}
+  .card .more span{transition:transform .25s}
+  a.card:hover .more span{transform:translateX(6px)}
+  .btn{transition:transform .2s,filter .2s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:translateY(0)}
+  nav a{transition:background .2s,color .2s}
+  .filters button{transition:background .2s,color .2s,transform .2s}
+  .filters button:hover{transform:translateY(-2px)}
+}
+/* Fallback fade-in for browsers without page transitions */
+@supports not (view-transition-name:none){
+  @media (prefers-reduced-motion:no-preference){main{animation:vt-in .45s ease-out both}}
+}
+
+/* ---- Cookie banner ---- */
+#cookie-banner{position:fixed;left:1rem;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));max-width:720px;margin:0 auto;background:var(--ink);color:var(--bg);border-radius:14px;padding:1rem 1.25rem;display:flex;gap:1rem 1.5rem;align-items:center;justify-content:space-between;flex-wrap:wrap;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:20;font-size:1rem}
+#cookie-banner p{margin:0;flex:1 1 280px}
+#cookie-banner a{color:inherit}
+#cookie-banner div{display:flex;gap:.6rem}
+#cookie-banner .btn{padding:.55rem 1.2rem;background:var(--lemon);color:var(--lemon-ink)}
+#cookie-banner .btn.alt{background:transparent;color:var(--bg);border:1.5px solid var(--bg)}
+footer #cookie-settings{cursor:pointer}
+@media (prefers-reduced-motion:no-preference){#cookie-banner{animation:pop .5s .3s both}}
+
+.ok.err{background:var(--ink);color:var(--bg)}
+.btn:disabled{opacity:.6;cursor:wait}

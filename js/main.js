@@ -61,7 +61,7 @@ if(all){
 
   const bar=el("filters");
   bar.innerHTML=cats.map(c=>`<button data-cat="${c}" aria-pressed="${c===cat}">${c}</button>`).join("")
-    +`<button class="more-btn" id="morebtn" aria-expanded="false" aria-controls="more">allergies and dietary filters<span class="badge" hidden></span></button>`;
+    +`<button class="more-btn" id="morebtn" aria-expanded="false" aria-controls="more">Allergies and dietary filters<span class="badge" hidden></span></button>`;
 
   const panel=document.createElement("div");
   panel.id="more";panel.className="fpanel";panel.hidden=true;
@@ -137,5 +137,42 @@ if(page){
       <section><h2>Method</h2><ol class="steps">${r.s.map((x,n)=>`<li style="--i:${n}">${x}</li>`).join("")}</ol></section>
     </div>
     <div class="sec"><h2>More to cook</h2><div class="grid">${more.map(card).join("")}</div></div>`;
+  }
+}
+
+// Guide cards (link to guide.html?g=guide-name)
+function gcard(g,i){
+  const s=slug(g.t);
+  return `<a class="card" href="guide.html?g=${s}" style="--i:${i}">
+  <div class="thumb" style="background:${g.bg};view-transition-name:thumb-g-${s}"><img src="${g.img}" alt="${g.t}" loading="lazy"></div>
+  <div class="in"><h3>${g.t}</h3><p class="meta">${g.c}, ${g.time}</p><p>${g.d}</p>
+  <span class="more">Read guide <span aria-hidden="true">→</span></span></div></a>`;
+}
+
+// Guides page
+const glist=el("guides");
+if(glist) glist.innerHTML=guides.map(gcard).join("");
+
+// Guide page: guide.html?g=guide-name
+const gpage=el("guide");
+if(gpage){
+  const key=new URLSearchParams(location.search).get("g");
+  const g=guides.find(x=>slug(x.t)===key);
+  if(!g){
+    gpage.innerHTML=`<div class="pagehead"><h1>Guide not found</h1><p>Sorry, we couldn’t find that guide.</p><p><a class="btn" href="guides.html">Back to all guides</a></p></div>`;
+  }else{
+    document.title=g.t+" – Robin Cook’s";
+    const more=guides.filter(x=>x!==g).slice(0,3);
+    const rel=g.rel&&recipes.find(r=>r.t===g.rel);
+    gpage.innerHTML=`<a class="back" href="guides.html">← All guides</a>
+    <div class="thumb rhero" style="background:${g.bg};view-transition-name:thumb-g-${key}"><img src="${g.img}" alt="${g.t}"></div>
+    <div class="rhead"><p class="meta">${g.c}, ${g.time}</p><h1>${g.t}</h1><p class="lede">${g.d}</p></div>
+    <div class="rcols">
+      <section><h2>What you need</h2><ul class="ings">${g.need.map((x,n)=>`<li style="--i:${n}">${x}</li>`).join("")}</ul></section>
+      <section><h2>Steps</h2><ol class="steps">${g.s.map((x,n)=>`<li style="--i:${n}">${x}</li>`).join("")}</ol></section>
+    </div>
+    <div class="tips"><h2>Top tips</h2><ul>${g.tips.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    ${rel?`<div class="sec"><h2>Try it in a recipe</h2><div class="grid">${card(rel,0)}</div></div>`:""}
+    <div class="sec"><h2>More guides</h2><div class="grid">${more.map(gcard).join("")}</div></div>`;
   }
 }

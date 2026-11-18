@@ -139,34 +139,3 @@ if(page){
     <div class="sec"><h2>More to cook</h2><div class="grid">${more.map(card).join("")}</div></div>`;
   }
 }
-
-// Contact page: messages are emailed to Robin via FormSubmit
-const EMAIL="robin.studio2@gmail.com";
-const form=el("form");
-if(form){
-  form.addEventListener("submit",async e=>{
-    e.preventDefault();
-    const ok=el("ok"),btn=form.querySelector("button[type=submit]");
-    const data=Object.fromEntries(new FormData(form));
-    data._subject="New message from Robin Cook’s website";
-    data._template="table";
-    btn.disabled=true;btn.textContent="Sending…";
-    try{
-      const res=await fetch("https://formsubmit.co/ajax/"+EMAIL,{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Accept":"application/json"},
-        body:JSON.stringify(data)
-      });
-      const j=await res.json();
-      if(!res.ok||j.success==="false"||j.success===false) throw new Error(j.message||"failed");
-      ok.classList.remove("err");
-      ok.textContent="Thanks, "+data.name+". Your message has been sent and I’ll get back to you soon.";
-      form.reset();
-    }catch(err){
-      ok.classList.add("err");
-      ok.textContent="Sorry, your message couldn’t be sent. Please try again, or email "+EMAIL+" directly.";
-    }
-    ok.classList.add("show");
-    btn.disabled=false;btn.textContent="Send message";
-  });
-}

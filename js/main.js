@@ -14,16 +14,107 @@ function card(r,i){
 const latest=el("latest");
 if(latest) latest.innerHTML=recipes.slice(0,3).map(card).join("");
 
-// Meals page: filters and full list
+// Ingredient names: turn "200g plain flour" into "flour" so ingredients can be compared
+const SYN={"eggs":"egg","lemons":"lemon","apples":"apple","garlic cloves":"garlic","cherry tomatoes":"tomatoes","chopped tomatoes":"tomatoes"};
+function norm(s){
+  let x=s.toLowerCase().replace(/^(handful|pinch) of\s+/,"").replace(/^[\d.\/]+\s*(kg|g|ml|l|tsp|tbsp|tins?)?\s+/,"");
+  x=x.replace(/^(melted|soft|cold|chopped|whole|plain|rolled|dark|cherry)\s+/,"");
+  return x.split(/\s+and\s+/).map(p=>SYN[p]||p);
+}
+
+// Major allergens and the ingredient words that trigger them
+const ALLERGENS={
+  "Celery":{re:/celery|celeriac/},
+  "Crustaceans":{re:/prawn|shrimp|\bcrab\b|lobster|crayfish|langoustine/},
+  "Eggs":{re:/^egg(?!plant)/},
+  "Fish":{re:/fish|salmon|tuna|\bcod\b|anchov|haddock|mackerel|sardine|trout/},
+  "Gluten":{re:/flour|spaghetti|pasta|oats|bread|barley|\brye\b|couscous|bulgur|semolina|noodles/},
+  "Milk":{re:/\bbutter\b|buttermilk|yoghurt|cheese|cream|^milk$/,not:/peanut|almond|coconut|cocoa/},
+  "Molluscs":{re:/mussel|oyster|\bclam|squid|scallop|snail|octopus|whelk/},
+  "Mustard":{re:/mustard/},
+  "Peanuts":{re:/peanut/},
+  "Sesame":{re:/sesame|tahini/},
+  "Soyabeans":{re:/\bsoy|tofu|edamame|miso|tempeh/},
+  "Sulphur dioxide and sulphites":{re:/\bwine\b|raisin|sultana|dried apricot|dried fruit|prune|sulphite|sulfite|vinegar/},
+  "Tree nuts":{re:/almond|walnut|cashew|hazelnut|pecan|pistachio|brazil nut|macadamia/}
+};
+const hasAllergen=(a,name)=>ALLERGENS[a].re.test(name)&&!(ALLERGENS[a].not&&ALLERGENS[a].not.test(name));
+const MEAT=/\b(chicken|beef|pork|lamb|bacon|ham|sausages?|mince|turkey|duck|veal|venison|gelatine|lard)\b/;
+const ANIMAL=/\b(honey|ghee|gelatine|lard)\b/;
+recipes.forEach(r=>{
+  r.names=r.i.flatMap(norm);
+  r.allergens=Object.keys(ALLERGENS).filter(a=>r.names.some(n=>hasAllergen(a,n)));
+  const meat=r.names.some(n=>MEAT.test(n))||["Fish","Crustaceans","Molluscs"].some(a=>r.allergens.includes(a));
+  r.vegetarian=!meat;
+  r.vegan=!meat&&!["Milk","Eggs"].some(a=>r.allergens.includes(a))&&!r.names.some(n=>ANIMAL.test(n));
+});
+
+// Meals page: category filters, "More filters" panel and full list
 const all=el("all");
 if(all){
   const cats=["All",...new Set(recipes.map(r=>r.c))];
+  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+  const ingredients=[...new Set(recipes.flatMap(r=>r.names))].sort();
+  const chip=(t,v)=>`<label class="chip"><input type="checkbox" data-t="${t}" value="${v}"><span>${cap(v)}</span></label>`;
   let cat="All";
+  const ex={a:new Set(),i:new Set(),d:new Set()};
+
+  const bar=el("filters");
+  bar.innerHTML=cats.map(c=>`<button data-cat="${c}" aria-pressed="${c===cat}">${c}</button>`).join("")
+    +`<button class="more-btn" id="morebtn" aria-expanded="false" aria-controls="more">More filters<span class="badge" hidden></span></button>`;
+
+  const panel=document.createElement("div");
+  panel.id="more";panel.className="fpanel";panel.hidden=true;
+  panel.innerHTML=`<div class="fhead"><h3>Dietary needs and allergens</h3><button class="linkbtn" id="clear" type="button">Clear all</button></div>
+    <p class="hint">Tick anything that applies. This is a guide based on each recipe’s ingredient list, so always check labels if you have an allergy.</p>
+    <p class="sub">Show only recipes that are</p><div class="chips">${["Vegan","Vegetarian"].map(d=>chip("d",d)).join("")}</div>
+    <p class="sub">Leave out recipes that contain</p><div class="chips">${Object.keys(ALLERGENS).map(a=>chip("a",a)).join("")}</div>
+    <p class="fmore-wrap"><button class="linkbtn" id="showmore" type="button" aria-expanded="false" aria-controls="ing">Show more</button></p>
+    <div class="fmore" id="ing" hidden><h3>Every ingredient on the site</h3><div class="chips">${ingredients.map(i=>chip("i",i)).join("")}</div></div>`;
+  bar.after(panel);
+  const count=document.createElement("p");
+  count.className="count";count.setAttribute("aria-live","polite");
+  panel.after(count);
+  const badge=bar.querySelector(".badge");
+
   const render=()=>{
-    all.innerHTML=recipes.filter(r=>cat==="All"||r.c===cat).map(card).join("");
-    el("filters").innerHTML=cats.map(c=>`<button aria-pressed="${c===cat}" data-cat="${c}">${c}</button>`).join("");
+    const shown=recipes.filter(r=>(cat==="All"||r.c===cat)
+      &&[...ex.d].every(d=>r[d.toLowerCase()])
+      &&![...ex.a].some(a=>r.allergens.includes(a))
+      &&![...ex.i].some(i=>r.names.includes(i)));
+    all.innerHTML=shown.length?shown.map(card).join(""):`<p class="empty">No recipes match those filters. Try removing one.</p>`;
+    count.textContent=`Showing ${shown.length} of ${recipes.length} recipes`;
+    const n=ex.a.size+ex.i.size+ex.d.size;
+    badge.hidden=!n;badge.textContent=n;
   };
-  el("filters").addEventListener("click",e=>{const b=e.target.closest("button");if(b){cat=b.dataset.cat;render();}});
+
+  bar.addEventListener("click",e=>{
+    const b=e.target.closest("button");if(!b)return;
+    if(b.id==="morebtn"){
+      panel.hidden=!panel.hidden;
+      b.setAttribute("aria-expanded",String(!panel.hidden));
+    }else if(b.dataset.cat){
+      cat=b.dataset.cat;
+      bar.querySelectorAll("[data-cat]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+      render();
+    }
+  });
+  panel.addEventListener("change",e=>{
+    const t=e.target;if(!t.dataset.t)return;
+    t.checked?ex[t.dataset.t].add(t.value):ex[t.dataset.t].delete(t.value);
+    render();
+  });
+  panel.addEventListener("click",e=>{
+    const b=e.target.closest("button");if(!b)return;
+    if(b.id==="showmore"){
+      const ing=el("ing");ing.hidden=!ing.hidden;
+      b.textContent=ing.hidden?"Show more":"Show less";
+      b.setAttribute("aria-expanded",String(!ing.hidden));
+    }else if(b.id==="clear"){
+      panel.querySelectorAll("input").forEach(i=>i.checked=false);
+      ex.a.clear();ex.i.clear();ex.d.clear();render();
+    }
+  });
   render();
 }
 

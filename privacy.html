@@ -9,17 +9,17 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Newsreader:ital,wght@0,400;0,600;1,400&display=swap">
 <link rel="stylesheet" href="css/style.css">
 </head>
-  <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-N6QZ894K"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-</script>
+
 <body>
 <header>
   <div class="wrap">
     <a class="logo" href="index.html">Robin Cook’s</a>
-    <nav aria-label="Main"><a href="index.html">Home</a><a href="meals.html">Recipes</a><a href="contact.html">Contact</a></nav>
+    <nav aria-label="Main"><a href="index.html">Home</a><a href="meals.html">Recipes</a><a href="guides.html">Guides</a><a href="contact.html">Contact</a></nav>
+    <form class="search" role="search" action="search.html" method="get">
+      <svg class="sicon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="q" name="q" type="search" placeholder="Search" aria-label="Search recipes and guides" autocomplete="off">
+      <div id="suggest" hidden></div>
+    </form>
   </div>
 </header>
 
@@ -30,7 +30,7 @@
       <p class="upd">Last updated 18 November 2026</p>
       <p>This policy explains what personal information Robin Cook’s collects, why we collect it and what we do with it.</p>
       <h2>What we collect</h2>
-      <p>We only collect the information you choose to send us through the contact form: your name, your email address, the topic you pick and your message.</p>
+      <p>We only collect the information you choose to send us when you email us or message us on Instagram: your email address, your name if you include it, and what your message says.</p>
       <p>If you accept analytics cookies, Google Analytics also collects information about how you use the site, such as the pages you view, roughly where you are, your browser and device type, and how you arrived. This information doesn’t include your name or email address.</p>
       <h2>How we use it</h2>
       <ul>
@@ -42,7 +42,7 @@
       <p>We use Google Analytics, a service provided by Google, to understand how visitors use the site and to improve it. It sets cookies on your device, but only if you click Accept on the cookie banner. If you decline, no analytics cookies are set and no analytics data is sent. We don’t use advertising cookies.</p>
       <p>You can change your choice at any time using “Cookie settings” in the footer of any page. You can also delete cookies in your browser settings. Google’s own policy explains how it handles data: policies.google.com/privacy.</p>
       <h2>Sharing your information</h2>
-      <p>We only share your details with services that help us run the site, such as Google Analytics (if you accept) and FormSubmit, the service that delivers your contact form message to us by email, or when the law requires it.</p>
+      <p>We only share your details with services that help us run the site, such as Google Analytics (if you accept) and our email provider, or when the law requires it.</p>
       <h2>How long we keep it</h2>
       <p>We keep messages for as long as we need them to reply and to keep a sensible record, and then we delete them.</p>
       <h2>Your rights</h2>
@@ -55,7 +55,10 @@
 
 <footer><div class="wrap"><span>© 2026 Robin Cook’s. Cooked with love.</span><nav aria-label="Footer"><a href="https://www.instagram.com/robins.cooking" target="_blank" rel="noopener noreferrer">Instagram</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms and conditions</a><a href="#" id="cookie-settings">Cookie settings</a></nav></div></footer>
 
+<script src="js/recipes.js"></script>
+<script src="js/guides.js"></script>
 <script src="js/main.js"></script>
+<script src="js/search.js"></script>
 <script src="js/analytics.js"></script>
 </body>
 </html>

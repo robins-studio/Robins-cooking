@@ -24,7 +24,7 @@ const GA_ID="G-Y6KEXVV157";
     if(document.getElementById("cookie-banner")) return;
     const b=document.createElement("div");
     b.id="cookie-banner";b.setAttribute("role","dialog");b.setAttribute("aria-label","Cookie consent");
-    b.innerHTML='<p>We’d like to use Google Analytics cookies to see which recipes are popular. No analytics run unless you accept. <a href="privacy.html">Privacy policy</a></p><div><button class="btn" data-c="yes">Accept</button><button class="btn alt" data-c="no">Decline</button></div>';
+    b.innerHTML='<p>We’d like to use Google Analytics cookies to see which recipes are popular. You can accept or reject non-essential cookies at any time. <a href="privacy.html">Privacy policy</a></p><div><button class="btn" data-c="yes">Accept</button><button class="btn alt" data-c="no">Decline</button></div>';
     b.addEventListener("click",e=>{
       const c=e.target.dataset&&e.target.dataset.c;if(!c)return;
       const was=read();save(c);b.remove();

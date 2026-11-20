@@ -41,13 +41,23 @@ const ALLERGENS={
 const hasAllergen=(a,name)=>ALLERGENS[a].re.test(name)&&!(ALLERGENS[a].not&&ALLERGENS[a].not.test(name));
 const MEAT=/\b(chicken|beef|pork|lamb|bacon|ham|sausages?|mince|turkey|duck|veal|venison|gelatine|lard)\b/;
 const ANIMAL=/\b(honey|ghee|gelatine|lard)\b/;
-recipes.forEach(r=>{
-  r.names=r.i.flatMap(norm);
-  r.allergens=Object.keys(ALLERGENS).filter(a=>r.names.some(n=>hasAllergen(a,n)));
+// Works out each recipe's allergens and diets from its ingredients, then applies any
+// corrections set by hand in the editor: contains:[...], without:[...], vegan:true/false, vegetarian:true/false
+function analyse(r){
+  const contains=r.contains||[],without=r.without||[];
+  r.names=(r.i||[]).flatMap(norm);
+  r.autoAllergens=Object.keys(ALLERGENS).filter(a=>r.names.some(n=>hasAllergen(a,n)));
+  r.allergens=Object.keys(ALLERGENS).filter(a=>contains.includes(a)||(r.autoAllergens.includes(a)&&!without.includes(a)));
   const meat=r.names.some(n=>MEAT.test(n))||["Fish","Crustaceans","Molluscs"].some(a=>r.allergens.includes(a));
-  r.vegetarian=!meat;
-  r.vegan=!meat&&!["Milk","Eggs"].some(a=>r.allergens.includes(a))&&!r.names.some(n=>ANIMAL.test(n));
-});
+  r.autoVegetarian=!meat;
+  r.autoVegan=!meat&&!["Milk","Eggs"].some(a=>r.allergens.includes(a))&&!r.names.some(n=>ANIMAL.test(n));
+  r.isVegetarian=typeof r.vegetarian==="boolean"?r.vegetarian:r.autoVegetarian;
+  r.isVegan=typeof r.vegan==="boolean"?r.vegan:r.autoVegan;
+  if(r.isVegan)r.isVegetarian=true;
+  if(!r.isVegetarian)r.isVegan=false;
+  return r;
+}
+recipes.forEach(analyse);
 
 // Meals page: category filters, "More filters" panel and full list
 const all=el("all");
@@ -79,7 +89,7 @@ if(all){
 
   const render=()=>{
     const shown=recipes.filter(r=>(cat==="All"||r.c===cat)
-      &&[...ex.d].every(d=>r[d.toLowerCase()])
+      &&[...ex.d].every(d=>r["is"+d])
       &&![...ex.a].some(a=>r.allergens.includes(a))
       &&![...ex.i].some(i=>r.names.includes(i)));
     all.innerHTML=shown.length?shown.map(card).join(""):`<p class="empty">No recipes match those filters. Try removing one.</p>`;
